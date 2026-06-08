@@ -40,11 +40,11 @@ Becoming a Student Leader at George Mason University
      numbers fit the structure of your documents.
      A review-heavy corpus warrants different chunking than a long FAQ. -->
 
-**Chunk size:**
+**Chunk size:** 500 characters
 
-**Overlap:**
+**Overlap:** 50 characters
 
-**Reasoning:**
+**Reasoning:** Most of my documents are fairly short and self-contained — things like FAQ entries, committee descriptions, and bullet-pointed leadership tips. 500 characters felt like a sweet spot: big enough to hold a complete thought (like a full FAQ answer or a committee description), but small enough that I'm not stuffing unrelated content into the same chunk. The 50-character overlap is mostly there as a safety net for cases where a sentence gets cut right at a boundary to avoid losing the tail end of something important. The CSV of student organizations is the one exception; rows there are short and structured, so chunking by row or small row groups makes more sense than strict character splits.
 
 ---
 
@@ -56,11 +56,11 @@ Becoming a Student Leader at George Mason University
      would you weigh in choosing a different embedding model — context length, multilingual
      support, accuracy on domain-specific text, latency? -->
 
-**Embedding model:**
+**Embedding model:** all-MiniLM-L6-v2 via sentence-transformers
 
-**Top-k:**
+**Top-k:** 5
 
-**Production tradeoff reflection:**
+**Production tradeoff reflection:** all-MiniLM-L6-v2 is a solid option here, since it's fast, runs locally, and doesn't need an API key. But if this were a real tool that students actually used, I'd think harder about the tradeoffs. The main one is domain specificity: MiniLM was trained on general text, and some of the GMU-specific terminology (committee names, org categories, acronyms like "URB" or "EDC") might not embed as meaningfully as it would with a model fine-tuned on university or government text. I'd also consider text-embedding-3-small from OpenAI if latency and cost were acceptable — it has a much larger context window and generally better semantic accuracy. Multilingual support isn't a big concern here since all documents are in English, but if this were expanded to serve Mason's student population in our korea campus, that would become a real factor.
 
 ---
 
@@ -71,13 +71,13 @@ Becoming a Student Leader at George Mason University
      is right or wrong. "What are good dining halls?" is too vague.
      "What do students say about wait times at [dining hall name] during lunch?" is testable. -->
 
-| #   | Question | Expected answer |
-| --- | -------- | --------------- |
-| 1   |          |                 |
-| 2   |          |                 |
-| 3   |          |                 |
-| 4   |          |                 |
-| 5   |          |                 |
+| #   | Question                                                                                           | Expected answer                                                                                                                                                                              |
+| --- | -------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | How many seats are in the Undergraduate Representative Body, and how are they distributed?         | 50 total seats — 20 academic college seats (2 per college) and 30 at-large seats                                                                                                             |
+| 2   | What is the RSO HUB and what can you use it for?                                                   | It's a one-stop resource for club officers to start a club, apply for funding, re-register an existing club, and explore officer roles                                                       |
+| 3   | What committees can a URB representative sit on?                                                   | Administrative and Financial Affairs, University Academics, Diversity Equity and Inclusion, Government and Community Relations, University Services, and Student Engagement and Support      |
+| 4   | What are two concrete ways a student can demonstrate leadership without holding an official title? | practicing empathy (letting others speak first, attending cultural events), taking accountability for mistakes, or assuming positive intent in conflicts                                     |
+| 5   | What resources does an RSO get access to after registering with Student Involvement?               | Guidance from the RSO Support Team, eligibility for Student Funding Board funding, access to campus space at discounted or no cost, Mason360 presence, and access to the Imagination Station |
 
 ---
 
@@ -87,9 +87,9 @@ Becoming a Student Leader at George Mason University
      Consider: noisy or inconsistent documents, missing source attribution, off-topic
      retrieval, chunks that split key information across boundaries. -->
 
-1.
+1. The CSV is structured data. The gmu_groups.csv file lists 500+ organizations in a table format, which doesn't chunk well with a plain character splitter. If I just run it through the same chunking logic as everything else, I'll end up with chunks that cut through row boundaries and produce garbled, half-row text. I'll need to handle it separately: either chunk by row, or convert each row into a short sentence like "The Artificial Intelligence Club is a Registered Student Organization in the Academic, STEM, and Computer/Technology categories.
 
-2.
+2. Short documents might retrieve poorly against broad queries. Several of my documents (like URB_AGENCIES or ABOUT_UDC_GMU) are quite short. If a user asks something general like "how do I get involved in student government?", the retriever might surface chunks from the general leadership articles instead of the GMU-specific governance pages, just because the semantic overlap with those broader documents is higher. I might need to tune top-k or add some metadata filtering to prefer GMU-specific sources for GMU-specific questions.
 
 ---
 
@@ -100,6 +100,24 @@ Becoming a Student Leader at George Mason University
      Label each stage with the tool or library you're using.
      You can use ASCII art, a Mermaid diagram, or embed a sketch as an image.
      You'll use this diagram as context when prompting AI tools to implement each stage. -->
+
+┌─────────────────────────────────────────────────────────────────────┐
+│ RAG Pipeline │
+└─────────────────────────────────────────────────────────────────────┘
+
+[1] Document Ingestion - Plain text files: read directly with open() - CSV: pandas, convert rows to sentence strings
+│
+▼
+[2] Chunking - Library: custom chunk_text() using character splits - Chunk size: 500 chars, overlap: 50 chars - CSV handled separately (row-level chunking)
+│
+▼
+[3] Embedding + Vector Store - Embedding model: all-MiniLM-L6-v2 (sentence-transformers) - Vector store: ChromaDB (local, persistent)
+│
+▼
+[4] Retrieval - Query embedded with same model - Top-5 chunks retrieved by cosine similarity from Chroma
+│
+▼
+[5] Generation - Retrieved chunks formatted into a context block - Sent to OpenAI GPT-4o-mini with a grounding system prompt - Response returned via a simple CLI or Gradio interface
 
 ---
 
@@ -115,8 +133,8 @@ Becoming a Student Leader at George Mason University
      "I'll give Claude my Chunking Strategy section and ask it to implement chunk_text()
      with my specified chunk size and overlap" is a plan. -->
 
-**Milestone 3 — Ingestion and chunking:**
+**Milestone 3 — Ingestion and chunking:** I'll give claude the Documents table from this file plus the Chunking Strategy section and ask it to implement an ingest.py script with a load_documents() function and a chunk_text() function matching my 500/50 spec. I'll also tell it about the CSV edge case and ask it to handle that separately by converting rows to sentence strings. I'll verify the output by checking that chunks from a known document are the right length and don't cut mid-sentence too aggressively.
 
-**Milestone 4 — Embedding and retrieval:**
+**Milestone 4 — Embedding and retrieval:** I'll give claude the Architecture diagram and the Retrieval Approach section and ask it to implement embed_and_store.py using sentence-transformers and ChromaDB. I'll ask it to produce a retrieve(query, k=5) function that returns the top-5 chunks with their source filenames. I'll test it manually with one of my evaluation questions (like the URB seat question) and check that the relevant chunks from ABOUT_URB_GMU actually come back in the top 5.
 
-**Milestone 5 — Generation and interface:**
+**Milestone 5 — Generation and interface:** I'll give claude my grounding instruction, the retrieval output format from Milestone 4, and ask it to implement a generate.py and app.py (streamlit) that builds a context block from retrieved chunks and calls groq with a strict system prompt. I'll run all 5 evaluation questions through it and compare outputs to my expected answers table above to judge accuracy.
