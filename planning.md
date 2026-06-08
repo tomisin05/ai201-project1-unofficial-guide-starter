@@ -9,7 +9,7 @@
 
 ## Domain
 
-<!-- What domain did you choose? Why is this knowledge valuable and hard to find through official channels? -->
+Becoming a Student Leader at George Mason University
 
 ---
 
@@ -18,18 +18,18 @@
 <!-- List your specific sources: URLs, subreddit names, forum threads, or file descriptions.
      Aim for at least 10 sources that together cover different subtopics or perspectives within your domain. -->
 
-| # | Source | Description | URL or location |
-|---|--------|-------------|-----------------|
-| 1 | | | |
-| 2 | | | |
-| 3 | | | |
-| 4 | | | |
-| 5 | | | |
-| 6 | | | |
-| 7 | | | |
-| 8 | | | |
-| 9 | | | |
-| 10 | | | |
+| #   | Source                                      | Description                                                                              | URL or location                                      |
+| --- | ------------------------------------------- | ---------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| 1   | GMU Student Government (About SG)           | Overview of GMU's Student Government structure, mission, elected/appointed roles         | documents/ABOUT_SG_GMU                               |
+| 2   | GMU Undergraduate Representative Body (URB) | URB member list, committee descriptions, and leadership roles                            | documents/ABOUT_URB_GMU                              |
+| 3   | GMU Elections and Disputes Commission (EDC) | EDC structure, authority, member list, and two internal agencies                         | documents/ABOUT_UDC_GMU                              |
+| 4   | GMU URB Agencies                            | Student Culinary Council and Student Parking Board descriptions and members              | documents/URB_AGENCIES                               |
+| 5   | GMU RSO FAQ                                 | FAQ on finding, joining, and starting Registered Student Organizations at Mason          | documents/FAQ_RSO_GMU                                |
+| 6   | GMU RSO Support & Resources                 | Benefits, resources, annual events, Imagination Station, voice walls for RSOs            | documents/RSO_Support_and_resources                  |
+| 7   | GMU Student Groups Directory                | CSV listing 500+ student organizations with categories and membership durations          | documents/gmu_groups.csv                             |
+| 8   | GMU Guide: Start an Organization            | Step-by-step guide to starting a new RSO at George Mason University                      | documents/Guide_to_start_an_organization_gmu         |
+| 9   | 6 Ways Students Can Demonstrate Leadership  | Article on leadership behaviors students can practice on campus                          | documents/6_ways_students_can_demonstrate_leadership |
+| 10  | How to Become a Student Leader on Campus    | General guide on student leadership qualities, opportunities, and emotional intelligence | documents/How_to_become_a_student_leader             |
 
 ---
 
@@ -71,13 +71,13 @@
      is right or wrong. "What are good dining halls?" is too vague.
      "What do students say about wait times at [dining hall name] during lunch?" is testable. -->
 
-| # | Question | Expected answer |
-|---|----------|-----------------|
-| 1 | | |
-| 2 | | |
-| 3 | | |
-| 4 | | |
-| 5 | | |
+| #   | Question | Expected answer |
+| --- | -------- | --------------- |
+| 1   |          |                 |
+| 2   |          |                 |
+| 3   |          |                 |
+| 4   |          |                 |
+| 5   |          |                 |
 
 ---
 
